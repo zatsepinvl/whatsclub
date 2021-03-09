@@ -1,0 +1,33 @@
+@startuml
+actor user
+participant web as "Web Browser"
+participant mobile as "Mobile Device"
+participant backend as "Backend"
+participant db as "Database"
+
+user -> web++: Open WhatsClub Web
+return Login page
+user -> web++: Click "Login with QR"
+web -> backend++: Start login with QR session
+return { sessionId, secret }
+web -> web: Generate QR code
+user <-- web: Show QR code with sessionId
+loop Request backend for login
+    web -> backend++: Logged in?
+    return: Yes or No
+    web--
+end
+user -> mobile++: Open WhatsClub App
+note over mobile: User has already\nbeen logged in
+return Homepage
+user -> mobile++: Click "WhatsClub Web"
+return QR scanner
+user -> mobile++: Scan QR code shown by WhatsClub Web
+mobile -> backend++: Login user by sessionId
+return OK
+return Success
+web++
+web -> backend++: Is user logged in?
+return: Yes
+user <-- web--: Homepage
+@enduml

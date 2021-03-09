@@ -1,0 +1,9 @@
+#IDEA
+.idea
+*.iml
+
+#NPM
+node_modules
+
+#Office
+~*.pptx

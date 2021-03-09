@@ -1,0 +1,20 @@
+{
+  "name": "whatsclub-backend-api",
+  "version": "1.0.0",
+  "description": "",
+  "main": "src/index.js",
+  "scripts": {
+    "start": "PORT=$PORT node src/index.js"
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "express": "^4.17.1",
+    "express-jwt": "^6.0.0",
+    "ioredis": "^4.23.0",
+    "jsonwebtoken": "^8.5.1",
+    "morgan": "^1.10.0",
+    "redis": "^3.0.2",
+    "uuid": "^8.3.2"
+  }
+}
