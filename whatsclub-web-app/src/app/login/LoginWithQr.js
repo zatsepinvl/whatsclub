@@ -32,7 +32,7 @@ function LoginWithQr() {
                 <div className="login-guide">
                     <span className="login-guide-title">To use WhatsClub on your computer:</span>
                     <ol>
-                        <li>Open WhatsApp on your phone</li>
+                        <li>Open WhatsClub on your phone</li>
                         <li>Click <b>WhatsClub Web</b> button</li>
                         <li>Point your phone to this screen to capture the code</li>
                     </ol>
