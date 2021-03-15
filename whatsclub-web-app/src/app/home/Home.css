@@ -1,0 +1,45 @@
+.home-container {
+    height: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+}
+
+
+.home-container h4 {
+    color: #525252;
+    font-size: 28px;
+    font-weight: 300;
+    line-height: normal;
+}
+
+.home-logout-button {
+    outline: 0;
+    cursor: pointer;
+    background: darkcyan;
+    border: 1px solid darkcyan;
+    width: 200px;
+    height: 48px;
+    border-radius: 2px;
+    text-shadow: 0 -1px 0 rgb(0 0 0 / 12%);
+    box-shadow: 0 2px 0 rgb(0 0 0 / 5%);
+    color: whitesmoke;
+    font-size: 16px;
+    font-weight: 400;
+    line-height: normal;
+}
+
+.home-logout-button:hover {
+    opacity: 80%;
+    border: 1px solid #008B7F;
+    border-radius: 2px;
+}
+
+.home-logout-button:focus {
+    background: darkcyan;
+}
+
+.home-logout-button:active {
+    opacity: 90%;
+}

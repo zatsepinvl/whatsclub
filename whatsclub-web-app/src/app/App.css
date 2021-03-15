@@ -1,0 +1,47 @@
+.app-container {
+    position: absolute;
+    height: 100%;
+    width: 100%;
+    top: 0;
+    left: 0;
+    background-color: whitesmoke;
+}
+
+.app-content {
+    position: absolute;
+    top: 111px;
+    height: 444px;
+    width: 888px;
+    right: 0;
+    left: 0;
+    margin: auto;
+    background: #fff;
+    border: 2px;
+    border-radius: 3px;
+    box-shadow: 0 4px 8px 0 rgb(0 0 0 / 20%), 0 6px 20px 0 rgb(0 0 0 / 19%);
+}
+
+
+.app-background-top {
+    height: 222px;
+    background-color: darkcyan;
+    align-items: center;
+    display: flex;
+    flex: none;
+    justify-content: center;
+    min-height: 39px;
+}
+
+.app-background-title {
+    color: #fff;
+    font-size: 20px;
+    font-weight: 500;
+    line-height: normal;
+    text-transform: uppercase;
+    vertical-align: middle;
+    margin-bottom: 60px;
+    margin-right: 700px;
+}
+
+.app-background-bottom {
+}

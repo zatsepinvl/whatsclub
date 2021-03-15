@@ -1,0 +1,29 @@
+.login-container {
+    padding: 88px 60px 110px;
+}
+
+.login-content {
+    display: flex;
+    justify-content: space-between;
+}
+
+.login-loading {
+    width: 222px;
+    height: 222px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.login-guide-title {
+    color: #525252;
+    font-size: 28px;
+    font-weight: 300;
+    line-height: normal;
+}
+
+.login-guide li {
+    font-size: 18px;
+    line-height: 28px;
+    margin-top: 20px;
+}

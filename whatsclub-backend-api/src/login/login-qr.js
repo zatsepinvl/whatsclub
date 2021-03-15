@@ -24,36 +24,47 @@ app.post("/login/qr/sessions", (req, res) => {
     res.send(loginSession);
 });
 
-app.get("/login/qr/sessions/:sessionId", jwt.authenticated(QR_LOGIN_SCOPE), async (req, res) => {
+app.get("/login/qr/sessions/:sessionId/events", jwt.authenticated(QR_LOGIN_SCOPE), async (req, res) => {
     const {sessionId} = req.token;
     const {sessionId: sessionIdFromPath} = req.params;
     if (sessionId !== sessionIdFromPath) {
         req.status(404).send();
+        return;
     }
+    res.setHeader("Content-Type", "text/event-stream");
+    res.setHeader("Connection", "keep-alive",);
+    res.setHeader("Cache-Control", "no-transform");
+    res.flushHeaders();
+
     const updatedSession = await redis.get(sessionId).then(JSON.parse);
-    const sessionHandler = async (session) => {
+    const handleSession = async (session) => {
         if (session.status === "accepted") {
             const username = session.username;
+            const user = {username};
             const accessToken = jwt.issueAccessToken({username}, "1d");
-            res.send({session, accessToken});
+            const data = JSON.stringify({session, accessToken, user})
+            console.log(data);
+            res.write(`data: ${data}\n\n`);
         } else {
-            res.send({session});
+            const data = JSON.stringify({session})
+            console.log(data);
+            res.write(`data: ${data}\n\n`);
         }
     };
     if (updatedSession) {
-        await sessionHandler(updatedSession);
+        await handleSession(updatedSession);
     } else {
         const eventId = "login:qr:session" + sessionId;
-        const timeoutId = setTimeout(() => {
-            loginSessionEventEmitter.removeAllListeners(eventId);
-            res.send({});
-        }, 10000);
         loginSessionEventEmitter.once(eventId, async (session) => {
-            await sessionHandler(session);
-            clearTimeout(timeoutId);
+            await handleSession(session);
         });
-
     }
+    const ping = setInterval(() => {
+        res.write("event: ping\n\n");
+    }, 10000);
+    req.on('close', () => {
+        clearInterval(ping);
+    });
 });
 
 app.put("/login/qr/sessions/:sessionId", jwt.authenticated(), async (req, res) => {
