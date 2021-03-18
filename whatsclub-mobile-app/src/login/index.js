@@ -1,10 +1,10 @@
 import LoginScreen from "./LoginScreen";
-import LoginStore from "./LoginStore";
+import AuthStore from "../auth/AuthStore";
 
 const LOGIN_SCREEN_NAME = "login";
 
 export {
     LoginScreen,
     LOGIN_SCREEN_NAME,
-    LoginStore
+    AuthStore
 }
