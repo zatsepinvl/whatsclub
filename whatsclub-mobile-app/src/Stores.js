@@ -1,14 +1,7 @@
 import React, {useContext} from 'react'
+import RootStore from "./RootStore";
 import AuthStore from "./auth/AuthStore";
-import ApiClient from "./api/ApiClient";
-
-const apiClient = new ApiClient();
-
-class RootStore {
-    constructor() {
-        this.authStore = new AuthStore(this, apiClient);
-    }
-}
+import WebappStore from "./webapp/WebappStore";
 
 const RootStoreContext = React.createContext();
 
@@ -16,13 +9,17 @@ const useAuth = (): AuthStore => {
     return useContext(RootStoreContext).authStore;
 };
 
+const useWebapp = (): WebappStore => {
+    return useContext(RootStoreContext).webappStore;
+}
+
 function StoreProvider({children}) {
     const rootStore = new RootStore();
     return <RootStoreContext.Provider value={rootStore}>{children}</RootStoreContext.Provider>;
 }
 
 export {
-    RootStore,
+    StoreProvider,
     useAuth,
-    StoreProvider
+    useWebapp
 }

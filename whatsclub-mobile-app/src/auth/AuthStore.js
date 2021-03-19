@@ -1,13 +1,14 @@
 import {makeAutoObservable} from "mobx";
 import ApiClient from "../api/ApiClient";
+import RootStore from "../RootStore";
 
 
 class AuthStore {
     user = undefined;
     accessToken = undefined;
 
-    constructor(rootStore, apiClient: ApiClient) {
-        makeAutoObservable(this);
+    constructor(rootStore: RootStore, apiClient: ApiClient) {
+        makeAutoObservable(this, {client: false});
         this.client = apiClient;
     }
 
@@ -16,15 +17,15 @@ class AuthStore {
     }
 
     async login(username, password) {
-        const {loginSessionToken} = await this.client.post("/login/password", {
+        const {loginSessionToken} = await this.client.postPublic("/login/password", {
             "username": "user@mail.com",
             "password": "password"
         });
         console.log("loginSessionToken", loginSessionToken);
-        const {accessToken} = await this.client.post("/login/mfa/phone-otp",
+        const {accessToken} = await this.client.post("/login/mfa/phone-otp", loginSessionToken,
             {
                 "otp": "4332"
-            }, loginSessionToken);
+            });
         console.log("accessToken", accessToken);
         this.accessToken = accessToken;
         this.user = await this.client.get("/users/me", accessToken);
