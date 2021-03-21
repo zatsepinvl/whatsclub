@@ -17,7 +17,7 @@ app.post("/login/password", (req, res) => {
             loginSessionToken: token
         })
     } else {
-        res.status(401).send({message: "Invalid username or password"});
+        res.status(401).send({message: "Invalid username or password", code: "IUOP01"});
     }
 });
 
@@ -28,6 +28,6 @@ app.post("/login/mfa/phone-otp", jwt.authenticated(MFA_LOGIN_SCOPE), (req, res) 
         const accessToken = jwt.issueAccessToken({username});
         res.status(200).send({accessToken});
     } else {
-        res.status(401).json({message: "Invalid login session token or OTP"});
+        res.status(401).json({message: "Invalid login session token or OTP", code:"IOTP01"});
     }
 });

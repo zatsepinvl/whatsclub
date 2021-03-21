@@ -8,9 +8,9 @@ const SERVER_PORT = process.env.PORT || 3000;
 
 const app = express();
 app.use(express.json());
-app.use(jwt.unauthorizedErrors());
 app.use(morgan("dev"));
 app.use(login);
 app.use(users);
+app.use(jwt.unauthorizedErrors());
 
 app.listen(SERVER_PORT, () => console.log(`Server listening at port ${SERVER_PORT}`));

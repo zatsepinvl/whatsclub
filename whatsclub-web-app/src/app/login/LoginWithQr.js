@@ -30,10 +30,10 @@ function LoginWithQr() {
         <div className="login-container">
             <div className="login-content">
                 <div className="login-guide">
-                    <span className="login-guide-title">To use WhatsClub on your computer:</span>
+                    <span className="login-guide-title">To use WhatsClubb on your computer:</span>
                     <ol>
-                        <li>Open WhatsClub on your phone</li>
-                        <li>Click <b>WhatsClub Web</b> button</li>
+                        <li>Open WhatsClubb on your phone</li>
+                        <li>Click <b>WhatsClubb Web</b> button</li>
                         <li>Point your phone to this screen to capture the code</li>
                     </ol>
                 </div>

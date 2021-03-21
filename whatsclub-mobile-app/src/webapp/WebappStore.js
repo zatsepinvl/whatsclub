@@ -1,13 +1,13 @@
 import {makeAutoObservable} from "mobx";
 import ApiClient from "../api/ApiClient";
-import RootStore from "../RootStore";
+import AuthStore from "../auth/AuthStore";
 
 class WebappStore {
 
-    constructor(rootStore: RootStore, apiClient: ApiClient) {
+    constructor(authStore: AuthStore, apiClient: ApiClient) {
         makeAutoObservable(this, {client: false, auth: false});
         this.client = apiClient;
-        this.auth = rootStore.authStore;
+        this.auth = authStore;
     }
 
     async acceptWebappQrLogin(sessionId) {

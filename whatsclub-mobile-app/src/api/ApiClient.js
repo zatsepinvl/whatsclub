@@ -1,24 +1,32 @@
 const BASE_URL = "http://localhost:3001";
 
+class ApiRequestError extends Error {
+    constructor(httpCode, error) {
+        super(error.message);
+        this.httpCode = httpCode;
+        this.errorCode = error.code;
+    }
+}
+
 class ApiClient {
 
-    get(path, token) {
+    async get(path, token) {
         return this._jsonRequest({path, token, method: "GET"})
     }
 
-    postPublic(path, body) {
+    async postPublic(path, body) {
         return this._jsonRequest({path, body, method: "POST"})
     }
 
-    post(path, token, body) {
+    async post(path, token, body) {
         return this._jsonRequest({path, body, token, method: "POST"})
     }
 
-    put(path, token, body) {
+    async put(path, token, body) {
         return this._jsonRequest({path, body, token, method: "PUT"})
     }
 
-    _jsonRequest({path, body, token, method}) {
+    async _jsonRequest({path, body, token, method}) {
         const init = {
             method: method,
             headers: {
@@ -32,9 +40,12 @@ class ApiClient {
         if (token) {
             init.headers["Authorization"] = "Bearer " + token
         }
-        return fetch(BASE_URL + path, init)
-            .catch(console.error)
-            .then(res => res.json());
+        const response = await fetch(BASE_URL + path, init);
+        if (!response.ok) {
+            const error = await response.json();
+            throw new ApiRequestError(response.status, error);
+        }
+        return response.json();
     }
 }
 

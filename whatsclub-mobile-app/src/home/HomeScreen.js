@@ -1,37 +1,57 @@
 import React, {useEffect} from "react";
-import {StyleSheet, View, SafeAreaView, Button} from "react-native";
-import {useAuth} from "../Stores";
-import {WEBAPP_QRLOGIN_SCREEN_NAME} from "../webapp/WebAppQrLogin";
+import {Text, StyleSheet, View, Button} from "react-native";
+import {useAuth} from "../store/Stores";
+import {WEBAPP_QRLOGIN_SCREEN_NAME} from "../navigation/NavigationConsts";
 
 const HomeScreen = ({navigation}) => {
     const auth = useAuth();
 
-    useEffect(() => {
-        auth.login().then(console.log);
-    })
-
     const goToWebAppQrLogin = () => {
         navigation.navigate(WEBAPP_QRLOGIN_SCREEN_NAME);
     }
+
+    const logout = () => {
+        auth.logout();
+    }
+
     return (
-        <SafeAreaView style={styles.container}>
-            <View style={styles.vertical}>
-                <Button title="WhatsClub Web" onPress={goToWebAppQrLogin}/>
+        <View style={styles.container}>
+            <Text style={styles.title}>
+                Welcome, {auth.user.username}!
+            </Text>
+            <View style={styles.buttonContainer}>
+                <Button
+                    title="WhatsClubb Web"
+                    color="darkcyan"
+                    onPress={goToWebAppQrLogin}
+                />
             </View>
-        </SafeAreaView>
+            <View style={styles.buttonContainer}>
+                <Button
+                    title="Logout"
+                    color="darkcyan"
+                    onPress={logout}
+                />
+            </View>
+        </View>
     );
 };
 
 const styles = StyleSheet.create({
     container: {
         flex: 1,
-        justifyContent: "center"
-    },
-    vertical: {
+        justifyContent: "center",
         flexDirection: "column",
-        justifyContent: "space-around",
         padding: 10
-    }
+    },
+    title: {
+        fontSize: 20,
+        textAlign: "center",
+        fontWeight: "300",
+    },
+    buttonContainer: {
+        marginTop: 40
+    },
 });
 
 export default HomeScreen;

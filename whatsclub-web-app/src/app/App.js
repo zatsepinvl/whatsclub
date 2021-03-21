@@ -17,7 +17,7 @@ function App() {
         <div className="app-container">
             <div className="app-background">
                 <div className="app-background-top">
-                    <span className="app-background-title">WhatsClub Web</span>
+                    <span className="app-background-title">WhatsClubb Web</span>
                 </div>
                 <div className="app-background-bottom"/>
             </div>

@@ -7,7 +7,7 @@ module.exports = {
     unauthorizedErrors: function () {
         return (err, req, res, next) => {
             if (err.name === "UnauthorizedError") {
-                res.status(401).send({message: 'Unauthenticated'});
+                res.status(401).send({message: "Unauthenticated"});
             } else {
                 next();
             }
