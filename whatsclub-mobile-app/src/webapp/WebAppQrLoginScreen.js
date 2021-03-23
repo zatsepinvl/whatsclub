@@ -23,7 +23,6 @@ function WebAppQrLoginScreen({navigation}) {
         }
         await webappStore.acceptWebappQrLogin(data.sessionId);
         Vibration.vibrate(600);
-        Alert.alert("Success", "You've been logged into the web app.");
         setHandled(true);
         navigation.goBack();
     }

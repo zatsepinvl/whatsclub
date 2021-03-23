@@ -26,7 +26,7 @@ const LoginScreen = observer(() => {
 
     // !!!For test only
     useEffect(() => {
-        setUsername("user@mail.com");
+        setUsername("user1@mail.com");
         setPassword("password");
         setOtp("4332");
     })

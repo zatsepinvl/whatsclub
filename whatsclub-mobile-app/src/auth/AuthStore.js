@@ -5,7 +5,6 @@ import {StorageService} from "../storage/StorageService";
 const AUTH_STORAGE_KEY = "auth";
 
 class AuthStore {
-    loaded = false
     user = undefined;
     accessToken = undefined;
     loginSessionToken = undefined;
@@ -19,26 +18,17 @@ class AuthStore {
     async load() {
         const auth = await this.storage.get(AUTH_STORAGE_KEY);
         if (auth) {
+            const {accessToken} = auth;
+            const user = await this._loadCurrentUser(accessToken);
             runInAction(() => {
-                this.user = auth.user;
-                this.accessToken = auth.accessToken;
+                this.user = user;
+                this.accessToken = accessToken;
             })
         }
-        runInAction(() => {
-            this.loaded = true;
-        })
-    }
-
-    get isLoaded() {
-        return !!this.loaded;
     }
 
     get isLoggedIn() {
         return !!this.user;
-    }
-
-    fakeLogin() {
-        this.user = {username: "fake_user"}
     }
 
     async mfaLoginPassword(username, password) {
@@ -65,8 +55,8 @@ class AuthStore {
         }
         try {
             const {accessToken} = await this.client.post("/login/mfa/phone-otp", this.loginSessionToken, {otp});
-            const user = await this.client.get("/users/me", accessToken);
-            await this.storage.set(AUTH_STORAGE_KEY, {user, accessToken});
+            const user = await this._loadCurrentUser(accessToken);
+            await this.storage.set(AUTH_STORAGE_KEY, {accessToken});
             runInAction(() => {
                 this.accessToken = accessToken;
                 this.user = user;
@@ -79,6 +69,10 @@ class AuthStore {
             }
             throw e;
         }
+    }
+
+    async _loadCurrentUser(accessToken) {
+        return this.client.get("/users/me", accessToken);
     }
 
     async logout() {

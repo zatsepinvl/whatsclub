@@ -36,8 +36,9 @@ function useProvideAuth() {
         source.current = events;
         events.onmessage = (event) => {
             const data = JSON.parse(event.data);
-            const user = data.user
+            const {user, accessToken} = data;
             localStorage.setItem("user", JSON.stringify(user));
+            localStorage.setItem("accessToken", JSON.stringify(user));
             setUser(user);
             source.current.close();
             source.current = null;
