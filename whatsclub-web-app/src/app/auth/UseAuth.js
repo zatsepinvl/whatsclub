@@ -17,13 +17,28 @@ const useAuth = () => {
 
 function useProvideAuth() {
     const source = useRef(null);
-    const [user, setUser] = useState(() => {
-        const user = localStorage.getItem("user");
-        if (user) {
-            return JSON.parse(user);
+
+    const [loaded, setLoaded] = useState(false);
+    const [user, setUser] = useState(null);
+
+    const load = async () => {
+        try {
+            const accessToken = localStorage.getItem("accessToken");
+            if (!accessToken) {
+                return;
+            }
+            const {data: user} = await axios.get("/api/users/me", {
+                headers: {
+                    "Authorization": `Bearer ${accessToken}`
+                }
+            });
+            setUser(user);
+        } catch (e) {
+            console.warn(e);
+        } finally {
+            setLoaded(true);
         }
-        return null;
-    });
+    }
 
     const loginWithQr = async () => {
         const {data: session} = await axios.post("/api/login/qr/sessions");
@@ -37,8 +52,7 @@ function useProvideAuth() {
         events.onmessage = (event) => {
             const data = JSON.parse(event.data);
             const {user, accessToken} = data;
-            localStorage.setItem("user", JSON.stringify(user));
-            localStorage.setItem("accessToken", JSON.stringify(user));
+            localStorage.setItem("accessToken", accessToken);
             setUser(user);
             source.current.close();
             source.current = null;
@@ -52,11 +66,13 @@ function useProvideAuth() {
 
     const logout = () => {
         setUser(false);
-        localStorage.removeItem("user")
+        localStorage.removeItem("accessToken")
     };
 
     return {
         user,
+        loaded,
+        load,
         loginWithQr,
         logout,
     };

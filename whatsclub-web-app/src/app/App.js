@@ -9,9 +9,15 @@ import {useAuth} from "./auth/UseAuth.js";
 import AuthenticatedOnly from "./auth/AuthenticatedOnly";
 import Home from "./home/Home";
 import LoginWithQr from "./login/LoginWithQr";
+import {useEffect} from "react";
+import {Loader} from "../components/loader/Loader";
 
 function App() {
     const auth = useAuth();
+
+    useEffect(() => {
+        auth.load();
+    }, []);
 
     return (
         <div className="app-container">
@@ -22,21 +28,27 @@ function App() {
                 <div className="app-background-bottom"/>
             </div>
             <div className="app-content">
-                <Router>
-                    <Switch>
-                        <Route exact path="/login">
-                            <LoginWithQr/>
-                        </Route>
-                        <Route exact path="/home">
-                            <AuthenticatedOnly>
-                                <Home/>
-                            </AuthenticatedOnly>
-                        </Route>
-                        <Route exact path="/">
-                            {auth.user ? <Redirect to="/home"/> : <Redirect to="/login"/>}
-                        </Route>
-                    </Switch>
-                </Router>
+                {!auth.loaded ? (
+                    <div className="app-loader">
+                        <Loader/>
+                    </div>
+                ) : (
+                    <Router>
+                        <Switch>
+                            <Route exact path="/login">
+                                <LoginWithQr/>
+                            </Route>
+                            <Route exact path="/home">
+                                <AuthenticatedOnly>
+                                    <Home/>
+                                </AuthenticatedOnly>
+                            </Route>
+                            <Route exact path="/">
+                                {auth.user ? <Redirect to="/home"/> : <Redirect to="/login"/>}
+                            </Route>
+                        </Switch>
+                    </Router>
+                )}
             </div>
         </div>
     )

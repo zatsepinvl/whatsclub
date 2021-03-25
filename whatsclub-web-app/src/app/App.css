@@ -43,5 +43,9 @@
     margin-right: 700px;
 }
 
-.app-background-bottom {
+.app-loader {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100%;
 }
