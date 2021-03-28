@@ -1,6 +1,6 @@
 import {useEffect, useState} from "react";
 import {useAuth} from "../auth/UseAuth";
-import {useHistory, useLocation,} from "react-router-dom";
+import {useHistory, useLocation} from "react-router-dom";
 import QRCode from "qrcode.react";
 import "./Login.css";
 import {Loader} from "../../components/loader/Loader";

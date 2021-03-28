@@ -1,4 +1,4 @@
-import React, {useContext} from 'react'
+import React, {useContext} from "react";
 import RootStore from "./RootStore";
 import AuthStore from "../auth/AuthStore";
 import WebappStore from "../webapp/WebappStore";

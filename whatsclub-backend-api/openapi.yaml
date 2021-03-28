@@ -1,0 +1,49 @@
+openapi: 3.0.0
+info:
+  title: WhatsClubb OpenAPI
+  version: 1.0.0
+servers:
+  - url: 'http://localhost:3001'
+
+paths:
+  /users/me:
+    get:
+      tags:
+        - Users
+      summary: "Get current authenticated user"
+      responses: { }
+
+  /login/password:
+    post:
+      tags:
+        - Login
+      summary: "Login with email and password"
+      responses: { }
+
+  /login/mfa/phone-otp:
+    post:
+      tags:
+        - Login
+      summary: "MFA login with OTP"
+      responses: { }
+
+  /login/qr/sessions:
+    post:
+      tags:
+        - QR Login
+      summary: "Create QR login session"
+      responses: { }
+
+  /login/qr/sessions/{sessionId}:
+    put:
+      tags:
+        - QR Login
+      summary: "Accept or reject QR login"
+      responses: { }
+
+  /login/qr/sessions/{sessionId}/events:
+    get:
+      tags:
+        - QR Login
+      summary: "Subscribe on session events"
+      responses: { }

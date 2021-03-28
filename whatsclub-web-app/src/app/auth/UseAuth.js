@@ -7,7 +7,7 @@ import {EventSourcePolyfill} from 'event-source-polyfill';
 const AuthContext = createContext();
 
 function AuthProvider({children}) {
-    const auth = useProvideAuth();
+    const auth = Auth();
     return <AuthContext.Provider value={auth}>{children}</AuthContext.Provider>;
 }
 
@@ -15,8 +15,8 @@ const useAuth = () => {
     return useContext(AuthContext);
 };
 
-function useProvideAuth() {
-    const source = useRef(null);
+function Auth() {
+    const eventSource = useRef(null);
 
     const [loaded, setLoaded] = useState(false);
     const [user, setUser] = useState(null);
@@ -42,27 +42,37 @@ function useProvideAuth() {
 
     const loginWithQr = async () => {
         const {data: session} = await axios.post("/api/login/qr/sessions");
-        const {sessionId, accessToken} = session;
-        const events = new EventSourcePolyfill(`/api/login/qr/sessions/${sessionId}/events`, {
-            headers: {
-                "Authorization": `Bearer ${accessToken}`
-            }
-        });
-        source.current = events;
-        events.onmessage = (event) => {
-            const data = JSON.parse(event.data);
-            const {user, accessToken} = data;
-            localStorage.setItem("accessToken", accessToken);
-            setUser(user);
-            source.current.close();
-            source.current = null;
-        };
-        console.log("sessionId", sessionId);
+        const {sessionId, accessToken: loginAccessToken} = session;
+        console.log("[app] loginAccessToken", loginAccessToken);
+        console.log("[app] sessionId", sessionId);
+        subscribeOnSession(sessionId, loginAccessToken);
         return {
             action: "login:qr",
             sessionId: session.sessionId
         }
     };
+
+    const subscribeOnSession = (sessionId, loginAccessToken) => {
+        const events = new EventSourcePolyfill(`/api/login/qr/sessions/${sessionId}/events`, {
+            headers: {
+                "Authorization": `Bearer ${loginAccessToken}`
+            }
+        });
+        eventSource.current = events;
+        events.onmessage = (event) => {
+            const data = JSON.parse(event.data);
+            const {user, accessToken} = data;
+            localStorage.setItem("accessToken", accessToken);
+            console.log("[app] accessToken", accessToken);
+            setUser(user);
+            eventSource.current.close();
+            eventSource.current = null;
+        };
+        events.onerror = function (e) {
+            events.close();
+            setTimeout(() => subscribeOnSession(sessionId, loginAccessToken), 1000);
+        };
+    }
 
     const logout = () => {
         setUser(false);

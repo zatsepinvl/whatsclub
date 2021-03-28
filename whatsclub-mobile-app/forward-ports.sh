@@ -1,0 +1,1 @@
+adb reverse tcp:3001 tcp:3001

@@ -83,6 +83,4 @@ const styles = StyleSheet.create({
     }
 });
 
-export {
-    WebAppQrLoginScreen
-}
+export default WebAppQrLoginScreen;

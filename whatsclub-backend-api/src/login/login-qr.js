@@ -8,14 +8,14 @@ const QR_LOGIN_SCOPE = "login:qr";
 const LOGIN_QR_SESSION_CHANNEL = "login:qr:session";
 
 const loginSessionEventEmitter = new events.EventEmitter();
-const app = module.exports = express();
-
+subscriber.subscribe(LOGIN_QR_SESSION_CHANNEL);
 subscriber.on("message", function (channel, message) {
     const session = JSON.parse(message);
-    const eventId = "login:qr:session" + session.sessionId;
+    const eventId = "login:qr:session:" + session.sessionId;
     loginSessionEventEmitter.emit(eventId, session);
 });
-subscriber.subscribe(LOGIN_QR_SESSION_CHANNEL);
+
+const app = module.exports = express();
 
 app.post("/login/qr/sessions", (req, res) => {
     const sessionId = uuid.v4()
@@ -31,41 +31,43 @@ app.get("/login/qr/sessions/:sessionId/events", jwt.authenticated(QR_LOGIN_SCOPE
         req.status(404).send();
         return;
     }
+
     res.setHeader("Content-Type", "text/event-stream");
-    res.setHeader("Connection", "keep-alive",);
+    res.setHeader("Connection", "keep-alive");
     res.setHeader("Cache-Control", "no-transform");
     res.flushHeaders();
 
     const updatedSession = await redis.get(sessionId).then(JSON.parse);
-    const handleSession = async (session) => {
-        if (session.status === "accepted") {
-            const username = session.username;
-            const user = {username};
-            const accessToken = jwt.issueAccessToken({username}, "1d");
-            const data = JSON.stringify({session, accessToken, user})
-            console.log(data);
-            res.write(`data: ${data}\n\n`);
-        } else {
-            const data = JSON.stringify({session})
-            console.log(data);
-            res.write(`data: ${data}\n\n`);
-        }
-    };
     if (updatedSession) {
-        await handleSession(updatedSession);
+        await handleSession(updatedSession, res);
     } else {
-        const eventId = "login:qr:session" + sessionId;
+        const eventId = createLoginSessionEventId(sessionId);
         loginSessionEventEmitter.once(eventId, async (session) => {
-            await handleSession(session);
+            await handleSession(session, res);
         });
     }
-    const ping = setInterval(() => {
-        res.write("event: ping\n\n");
-    }, 10000);
+    const ping = setInterval(() => res.write("event: ping\n\n"), 10000);
     req.on('close', () => {
         clearInterval(ping);
     });
 });
+
+async function handleSession(session, res) {
+    if (session.status === "accepted") {
+        const username = session.username;
+        const user = {username};
+        const accessToken = jwt.issueAccessToken({username}, "1d");
+        const data = JSON.stringify({session, accessToken, user})
+        res.write(`data: ${data}\n\n`);
+    } else {
+        const data = JSON.stringify({session})
+        res.write(`data: ${data}\n\n`);
+    }
+}
+
+function createLoginSessionEventId(sessionId) {
+    return "login:qr:session:" + sessionId;
+}
 
 app.put("/login/qr/sessions/:sessionId", jwt.authenticated(), async (req, res) => {
     const {username} = req.token;
@@ -76,3 +78,4 @@ app.put("/login/qr/sessions/:sessionId", jwt.authenticated(), async (req, res) =
     await publisher.publish(LOGIN_QR_SESSION_CHANNEL, JSON.stringify(session));
     res.send(session);
 });
+
