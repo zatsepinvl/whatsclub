@@ -19,11 +19,15 @@ class AuthStore {
         const auth = await this.storage.get(AUTH_STORAGE_KEY);
         if (auth) {
             const {accessToken} = auth;
-            const user = await this._loadCurrentUser(accessToken);
-            runInAction(() => {
-                this.user = user;
-                this.accessToken = accessToken;
-            })
+            try {
+                const user = await this._loadCurrentUser(accessToken);
+                runInAction(() => {
+                    this.user = user;
+                    this.accessToken = accessToken;
+                });
+            } catch (e) {
+                //unauthenticated
+            }
         }
     }
 

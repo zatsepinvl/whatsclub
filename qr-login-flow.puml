@@ -28,6 +28,6 @@ return OK
 return Success
 web++
 web -> backend++: Is user logged in?
-return: Yes
+return Yes
 user <-- web--: Homepage
 @enduml
