@@ -3,7 +3,7 @@ Demo project for DataArt IT Talk Vrn March, 29 2021.
 
 ### References
 * [Event page on dataart.com](https://dataart.team/ru/events/online-events/it-talk-javascript-practices).
-* [Recording on youtube.com](https://www.youtube.com/watch?v=SHurKuNB7jM&ab_channel=DataArtOnline).
+* [Recording on youtube.com](https://youtu.be/SHurKuNB7jM?t=2556).
 
 ### Screenshots
 #### Web app
